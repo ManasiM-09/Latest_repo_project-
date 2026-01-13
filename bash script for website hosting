@@ -10,5 +10,8 @@ else
     echo "Git is already installed"
 fi
 
+#To clone git repo
 git clone https://github.com/ManasiM-09/Latest_repo_project-.git
+
+#To copy repo and pasting it to s3
 aws s3 cp Latest_repo_project- s3://amzn-bucket-for-project --recursive

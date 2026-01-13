@@ -1,0 +1,14 @@
+#!/bin/bash
+
+#To check whether git is installed or not 
+if ! command -v git &> /dev/null
+then
+    echo "Git not found... Installing git..."
+    sudo yum install git -y
+    echo "Git installed successfully"
+else
+    echo "Git is already installed"
+fi
+
+git clone https://github.com/ManasiM-09/Latest_repo_project-.git
+aws s3 cp Latest_repo_project- s3://amzn-bucket-for-project --recursive

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Blog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .tagline {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .add-post-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .add-post-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .post-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .post-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2em;
+        }
+
+        .post-content {
+            padding: 25px;
+        }
+
+        .post-title {
+            font-size: 1.6em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 400;
+        }
+
+        .post-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+            padding: 8px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .posts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>STYLE & THREADS</h1>
+            <p class="tagline">Where Fashion Meets Expression</p>
+        </header>
+
+        <div class="add-post-section">
+            <h2>Create New Post</h2>
+            <div class="form-group">
+                <label for="postTitle">Title</label>
+                <input type="text" id="postTitle" placeholder="Enter post title...">
+            </div>
+            <div class="form-group">
+                <label for="postImage">Image URL (optional)</label>
+                <input type="text" id="postImage" placeholder="Enter image URL...">
+            </div>
+            <div class="form-group">
+                <label for="postDescription">Description</label>
+                <textarea id="postDescription" placeholder="Share your fashion thoughts..."></textarea>
+            </div>
+            <button class="btn" onclick="addPost()">Publish Post</button>
+        </div>
+
+        <div id="postsContainer" class="posts-grid"></div>
+    </div>
+
+    <script>
+        let posts = [
+            {
+                id: 1,
+                title: "Summer Vibes 2025",
+                image: "",
+                description: "Discover the hottest summer trends that are taking over the fashion world. From flowy dresses to bold accessories, this season is all about comfort meets style."
+            },
+            {
+                id: 2,
+                title: "Minimalist Wardrobe Guide",
+                image: "",
+                description: "Learn how to build a capsule wardrobe that works for every occasion. Quality over quantity is the mantra for modern fashion enthusiasts."
+            }
+        ];
+
+        function renderPosts() {
+            const container = document.getElementById('postsContainer');
+            
+            if (posts.length === 0) {
+                container.innerHTML = '<div class="empty-state">No posts yet. Create your first fashion post above! ✨</div>';
+                return;
+            }
+
+            container.innerHTML = posts.map(post => `
+                <div class="post-card">
+                    <div class="post-image">
+                        ${post.image ? `<img src="${post.image}" alt="${post.title}" style="width:100%;height:100%;object-fit:cover;">` : '📸 Fashion Post'}
+                    </div>
+                    <div class="post-content">
+                        <h3 class="post-title">${post.title}</h3>
+                        <p class="post-description">${post.description}</p>
+                        <button class="delete-btn" onclick="deletePost(${post.id})">Delete Post</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function addPost() {
+            const title = document.getElementById('postTitle').value.trim();
+            const image = document.getElementById('postImage').value.trim();
+            const description = document.getElementById('postDescription').value.trim();
+
+            if (!title || !description) {
+                alert('Please fill in title and description!');
+                return;
+            }
+
+            const newPost = {
+                id: Date.now(),
+                title: title,
+                image: image,
+                description: description
+            };
+
+            posts.unshift(newPost);
+            
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postImage').value = '';
+            document.getElementById('postDescription').value = '';
+            
+            renderPosts();
+        }
+
+        function deletePost(id) {
+            posts = posts.filter(post => post.id !== id);
+            renderPosts();
+        }
+
+        renderPosts();
+    </script>
+</body>
+</html>
